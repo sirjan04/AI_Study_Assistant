@@ -1,0 +1,137 @@
+<%- include('partials/header') %>
+
+<div class="auth-page">
+  <div class="auth-card">
+
+    <!-- Logo -->
+    <div class="auth-logo">
+      🎓 AI<span style="font-weight:300;">Study</span>
+    </div>
+
+    <h2 class="auth-title">Create Account</h2>
+    <p class="auth-subtitle">Join thousands of students leveling up with AI</p>
+
+    <!-- Register Form -->
+    <form action="/register" method="POST">
+
+      <!-- Name Field -->
+      <div class="form-group">
+        <label class="form-label-custom">Full Name</label>
+        <div class="input-icon-wrap">
+          <input
+            type="text"
+            name="name"
+            class="form-control-custom"
+            placeholder="Your full name"
+            required
+            autocomplete="name"
+          />
+          <i class="bi bi-person input-icon"></i>
+        </div>
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label class="form-label-custom">Email Address</label>
+        <div class="input-icon-wrap">
+          <input
+            type="email"
+            name="email"
+            class="form-control-custom"
+            placeholder="you@example.com"
+            required
+            autocomplete="email"
+          />
+          <i class="bi bi-envelope input-icon"></i>
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label class="form-label-custom">Password</label>
+        <div class="input-icon-wrap">
+          <input
+            type="password"
+            name="password"
+            id="pass1"
+            class="form-control-custom"
+            placeholder="At least 6 characters"
+            required
+            minlength="6"
+            oninput="checkStrength(this.value)"
+          />
+          <i class="bi bi-lock input-icon"></i>
+        </div>
+        <!-- Password strength indicator -->
+        <div style="margin-top:8px;">
+          <div style="height:4px;background:var(--border);border-radius:10px;overflow:hidden;">
+            <div id="strengthBar" style="height:100%;width:0%;border-radius:10px;transition:all 0.3s;"></div>
+          </div>
+          <span id="strengthText" style="font-size:0.75rem;color:var(--text-muted);"></span>
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <label class="form-label-custom">Confirm Password</label>
+        <div class="input-icon-wrap">
+          <input
+            type="password"
+            name="confirmPassword"
+            id="pass2"
+            class="form-control-custom"
+            placeholder="Repeat your password"
+            required
+          />
+          <i class="bi bi-lock-fill input-icon"></i>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn-auth">
+        <i class="bi bi-rocket-takeoff me-2"></i>Create My Account
+      </button>
+
+    </form>
+
+    <!-- Divider -->
+    <div class="auth-divider">
+      <hr /> <span>or</span> <hr />
+    </div>
+
+    <!-- Login Link -->
+    <div class="auth-footer">
+      Already have an account?
+      <a href="/login" style="color:var(--primary-light);font-weight:600;">Sign in →</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Password strength checker
+  function checkStrength(val) {
+    const bar = document.getElementById('strengthBar');
+    const text = document.getElementById('strengthText');
+    let strength = 0;
+    if (val.length >= 6) strength++;
+    if (val.match(/[A-Z]/)) strength++;
+    if (val.match(/[0-9]/)) strength++;
+    if (val.match(/[^A-Za-z0-9]/)) strength++;
+
+    const levels = [
+      { width: '0%', color: '', label: '' },
+      { width: '25%', color: '#d63031', label: 'Weak' },
+      { width: '50%', color: '#fdcb6e', label: 'Fair' },
+      { width: '75%', color: '#00b894', label: 'Good' },
+      { width: '100%', color: '#00cec9', label: 'Strong 💪' }
+    ];
+
+    bar.style.width = levels[strength].width;
+    bar.style.background = levels[strength].color;
+    text.textContent = levels[strength].label;
+    text.style.color = levels[strength].color;
+  }
+</script>
+
+<%- include('partials/footer') %>

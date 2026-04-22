@@ -1,0 +1,203 @@
+<%- include('partials/header') %>
+
+<div class="chatbot-page">
+  <div class="container" style="max-width:860px;">
+
+    <!-- Page title -->
+    <div style="margin-bottom:24px;display:flex;align-items:center;gap:14px;">
+      <div style="width:50px;height:50px;border-radius:var(--radius-md);background:rgba(0,206,201,0.15);display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🤖</div>
+      <div>
+        <h2 style="margin:0;font-size:1.5rem;">AI Study Chatbot</h2>
+        <p style="margin:0;color:var(--text-muted);font-size:0.85rem;">Ask anything about your subjects</p>
+      </div>
+      <a href="/dashboard" style="margin-left:auto;color:var(--text-muted);font-size:0.85rem;display:flex;align-items:center;gap:6px;">
+        <i class="bi bi-arrow-left"></i> Dashboard
+      </a>
+    </div>
+
+    <!-- Chat Container -->
+    <div class="chat-container">
+
+      <!-- Chat Header -->
+      <div class="chat-header">
+        <div class="chat-avatar">🤖</div>
+        <div class="chat-bot-info">
+          <h6>StudyBot AI</h6>
+          <small style="color:var(--text-muted);">
+            <span class="online-dot"></span>Online & Ready
+          </small>
+        </div>
+        <div style="margin-left:auto;font-size:0.8rem;color:var(--text-muted);">
+          <i class="bi bi-info-circle me-1"></i>
+          Keyword-based · Upgrade to OpenAI for smarter responses
+        </div>
+      </div>
+
+      <!-- Messages Area -->
+      <div class="chat-messages" id="chatMessages">
+
+        <!-- Welcome message from bot -->
+        <div class="message-wrap">
+          <div class="msg-avatar bot-msg-avatar">🤖</div>
+          <div>
+            <div class="message-bubble bot-bubble">
+              👋 <strong>Hey there!</strong> I'm StudyBot, your AI study assistant!<br><br>
+              I can help you with <strong>programming</strong>, <strong>data structures</strong>,
+              <strong>algorithms</strong>, <strong>web development</strong>,
+              <strong>mathematics</strong>, and more.<br><br>
+              What would you like to learn today?
+            </div>
+            <div class="message-time">Just now</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Prompts -->
+      <div class="quick-prompts" id="quickPrompts">
+        <button class="quick-prompt-btn" onclick="sendQuick('Explain JavaScript')">⚡ JavaScript</button>
+        <button class="quick-prompt-btn" onclick="sendQuick('What is Machine Learning?')">🤖 Machine Learning</button>
+        <button class="quick-prompt-btn" onclick="sendQuick('Explain Data Structures')">📚 Data Structures</button>
+        <button class="quick-prompt-btn" onclick="sendQuick('Give me study tips')">📖 Study Tips</button>
+        <button class="quick-prompt-btn" onclick="sendQuick('Tell me about databases')">🗄️ Databases</button>
+      </div>
+
+      <!-- Input Area -->
+      <div class="chat-input-area">
+        <input
+          type="text"
+          class="chat-input"
+          id="userInput"
+          placeholder="Ask me anything about your subjects..."
+          autocomplete="off"
+          onkeydown="if(event.key==='Enter') sendMessage()"
+        />
+        <button class="btn-send" onclick="sendMessage()" title="Send message">
+          <i class="bi bi-send-fill"></i>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const chatMessages = document.getElementById('chatMessages');
+  const userInput = document.getElementById('userInput');
+
+  // Function to add a message bubble to chat
+  function addMessage(text, isUser = false) {
+    const wrap = document.createElement('div');
+    wrap.className = `message-wrap ${isUser ? 'user-msg' : ''}`;
+
+    const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    if (isUser) {
+      wrap.innerHTML = `
+        <div class="msg-avatar user-msg-avatar">👤</div>
+        <div>
+          <div class="message-bubble user-bubble">${escapeHtml(text)}</div>
+          <div class="message-time">${now}</div>
+        </div>
+      `;
+    } else {
+      // Bot message — supports simple markdown-like formatting
+      const formatted = text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>');
+      wrap.innerHTML = `
+        <div class="msg-avatar bot-msg-avatar">🤖</div>
+        <div>
+          <div class="message-bubble bot-bubble">${formatted}</div>
+          <div class="message-time">${now}</div>
+        </div>
+      `;
+    }
+
+    chatMessages.appendChild(wrap);
+    chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll to bottom
+  }
+
+  // Show typing indicator
+  function showTyping() {
+    const typing = document.createElement('div');
+    typing.className = 'message-wrap';
+    typing.id = 'typingIndicator';
+    typing.innerHTML = `
+      <div class="msg-avatar bot-msg-avatar">🤖</div>
+      <div>
+        <div class="typing-indicator">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      </div>
+    `;
+    chatMessages.appendChild(typing);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  // Remove typing indicator
+  function removeTyping() {
+    const t = document.getElementById('typingIndicator');
+    if (t) t.remove();
+  }
+
+  // Main send message function
+  async function sendMessage() {
+    const message = userInput.value.trim();
+    if (!message) return;
+
+    // Clear input
+    userInput.value = '';
+
+    // Hide quick prompts after first message
+    document.getElementById('quickPrompts').style.display = 'none';
+
+    // Add user message
+    addMessage(message, true);
+
+    // Show typing indicator (simulates bot thinking)
+    showTyping();
+
+    try {
+      // Send to server
+      const response = await fetch('/chatbot/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      });
+
+      const data = await response.json();
+
+      // Simulate thinking delay for realism
+      await new Promise(r => setTimeout(r, 600 + Math.random() * 600));
+
+      removeTyping();
+      addMessage(data.response, false);
+
+    } catch (err) {
+      removeTyping();
+      addMessage('⚠️ Sorry, something went wrong. Please try again.', false);
+    }
+  }
+
+  // Send a quick prompt
+  function sendQuick(text) {
+    userInput.value = text;
+    sendMessage();
+  }
+
+  // Simple HTML escaping for user input (security)
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(text));
+    return div.innerHTML;
+  }
+
+  // Focus input on load
+  userInput.focus();
+</script>
+
+<%- include('partials/footer') %>

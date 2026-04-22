@@ -1,0 +1,154 @@
+<%- include('partials/header') %>
+
+<div class="quiz-page">
+  <div class="container" style="max-width:760px;">
+
+    <!-- Quiz Header Card -->
+    <div class="quiz-header-card">
+      <div>
+        <h2 style="font-size:1.5rem;margin-bottom:4px;">🧠 Knowledge Quiz</h2>
+        <p style="color:var(--text-muted);margin:0;font-size:0.9rem;">
+          <%= questions.length %> questions · Multiple choice
+        </p>
+      </div>
+      <div style="text-align:right;">
+        <div id="questionCounter" style="font-family:var(--font-heading);font-size:1.8rem;font-weight:700;line-height:1;">
+          1/<%= questions.length %>
+        </div>
+        <div style="color:var(--text-muted);font-size:0.8rem;">Current Question</div>
+        <div class="quiz-progress-bar" style="width:160px;margin-top:8px;">
+          <div class="quiz-progress-fill" id="progressFill" style="width:<%= 100/questions.length %>%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz Form -->
+    <form id="quizForm" action="/quiz/submit" method="POST">
+
+      <% questions.forEach(function(q, index) { %>
+      <div class="question-card <%= index === 0 ? 'active' : '' %>" id="question-<%= index %>">
+
+        <!-- Question Header -->
+        <div class="question-number">Question <%= index + 1 %> of <%= questions.length %></div>
+        <div class="question-text"><%= q.questionText %></div>
+
+        <!-- Category & Difficulty -->
+        <div style="display:flex;gap:10px;margin-bottom:24px;">
+          <span style="background:rgba(108,99,255,0.1);border:1px solid rgba(108,99,255,0.2);color:var(--primary-light);padding:3px 10px;border-radius:50px;font-size:0.75rem;font-weight:600;">
+            <%= q.category %>
+          </span>
+          <span style="background:rgba(253,203,110,0.1);border:1px solid rgba(253,203,110,0.2);color:#fdcb6e;padding:3px 10px;border-radius:50px;font-size:0.75rem;font-weight:600;">
+            <%= q.difficulty %>
+          </span>
+        </div>
+
+        <!-- Options -->
+        <div class="options-grid">
+          <% const letters = ['A', 'B', 'C', 'D']; %>
+          <% q.options.forEach(function(opt, optIdx) { %>
+          <button
+            type="button"
+            class="option-btn"
+            data-qidx="<%= index %>"
+            data-optidx="<%= optIdx %>"
+            data-qid="<%= q._id %>"
+            onclick="selectOption(this, '<%= index %>', '<%= optIdx %>', '<%= q._id %>')"
+          >
+            <span class="option-letter"><%= letters[optIdx] %></span>
+            <%= opt %>
+          </button>
+          <!-- Hidden input for selected answer -->
+          <input type="hidden" name="answers[<%= q._id %>]" id="ans-<%= index %>" value="" />
+          <% }) %>
+        </div>
+
+      </div>
+      <% }) %>
+
+      <!-- Navigation Buttons -->
+      <div class="quiz-nav">
+        <button type="button" class="btn-secondary-custom" id="prevBtn" onclick="navigate(-1)" style="display:none;">
+          <i class="bi bi-arrow-left"></i> Previous
+        </button>
+
+        <button type="button" class="btn-primary-custom ms-auto" id="nextBtn" onclick="navigate(1)">
+          Next <i class="bi bi-arrow-right"></i>
+        </button>
+
+        <button type="submit" class="btn-primary-custom ms-auto" id="submitBtn" style="display:none;background:linear-gradient(135deg,var(--success),#00a381);">
+          <i class="bi bi-check-circle-fill"></i> Submit Quiz
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+<script>
+  let currentQ = 0;
+  const totalQ = <%= questions.length %>;
+  const answers = {}; // Stores selected answers { questionIndex: optionIndex }
+
+  // Select an option
+  function selectOption(btn, qIdx, optIdx, qId) {
+    // Remove selected class from siblings in this question
+    const container = document.getElementById(`question-${qIdx}`);
+    container.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+
+    // Mark this button as selected
+    btn.classList.add('selected');
+
+    // Store the answer
+    answers[qIdx] = optIdx;
+
+    // Update the hidden input for form submission
+    document.getElementById(`ans-${qIdx}`).value = optIdx;
+  }
+
+  // Navigate between questions
+  function navigate(direction) {
+    // Check if current question is answered before going forward
+    if (direction === 1 && answers[currentQ] === undefined) {
+      // Shake the question card
+      const card = document.getElementById(`question-${currentQ}`);
+      card.style.animation = 'none';
+      card.style.border = '1px solid var(--secondary)';
+      setTimeout(() => { card.style.border = '1px solid var(--border)'; }, 600);
+      return;
+    }
+
+    // Hide current question
+    document.getElementById(`question-${currentQ}`).classList.remove('active');
+
+    currentQ += direction;
+
+    // Show new question
+    document.getElementById(`question-${currentQ}`).classList.add('active');
+
+    // Update counter and progress bar
+    document.getElementById('questionCounter').textContent = `${currentQ + 1}/${totalQ}`;
+    document.getElementById('progressFill').style.width = `${((currentQ + 1) / totalQ) * 100}%`;
+
+    // Show/hide buttons
+    document.getElementById('prevBtn').style.display = currentQ > 0 ? 'flex' : 'none';
+    document.getElementById('nextBtn').style.display = currentQ < totalQ - 1 ? 'flex' : 'none';
+    document.getElementById('submitBtn').style.display = currentQ === totalQ - 1 ? 'flex' : 'none';
+  }
+
+  // Before submitting, make sure all answers are filled in
+  document.getElementById('quizForm').addEventListener('submit', function(e) {
+    // Sync all answers to hidden inputs
+    Object.keys(answers).forEach(qIdx => {
+      const input = document.getElementById(`ans-${qIdx}`);
+      if (input) input.value = answers[qIdx];
+    });
+
+    if (Object.keys(answers).length < totalQ) {
+      e.preventDefault();
+      alert('Please answer the current question before submitting!');
+    }
+  });
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,94 @@
+<%- include('partials/header') %>
+
+<div class="auth-page">
+  <div class="auth-card">
+
+    <!-- Logo -->
+    <div class="auth-logo">
+      🎓 AI<span style="font-weight:300;">Study</span>
+    </div>
+
+    <h2 class="auth-title">Welcome back</h2>
+    <p class="auth-subtitle">Sign in to continue your learning journey</p>
+
+    <!-- Login Form -->
+    <form action="/login" method="POST">
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label class="form-label-custom">Email Address</label>
+        <div class="input-icon-wrap">
+          <input
+            type="email"
+            name="email"
+            class="form-control-custom"
+            placeholder="you@example.com"
+            required
+            autocomplete="email"
+          />
+          <i class="bi bi-envelope input-icon"></i>
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label class="form-label-custom">Password</label>
+        <div class="input-icon-wrap">
+          <input
+            type="password"
+            name="password"
+            id="passwordInput"
+            class="form-control-custom"
+            placeholder="Enter your password"
+            required
+            autocomplete="current-password"
+          />
+          <i class="bi bi-eye input-icon" id="togglePassword" style="cursor:pointer;" onclick="togglePass()"></i>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn-auth">
+        <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+      </button>
+
+    </form>
+
+    <!-- Divider -->
+    <div class="auth-divider">
+      <hr /> <span>or</span> <hr />
+    </div>
+
+    <!-- Register Link -->
+    <div class="auth-footer">
+      Don't have an account?
+      <a href="/register" style="color:var(--primary-light);font-weight:600;">Create one free →</a>
+    </div>
+
+    <!-- Demo credentials hint -->
+    <div style="margin-top:20px;padding:12px 16px;background:rgba(108,99,255,0.08);border:1px solid rgba(108,99,255,0.15);border-radius:var(--radius-sm);">
+      <p style="margin:0;font-size:0.8rem;color:var(--text-muted);text-align:center;">
+        <i class="bi bi-info-circle me-1"></i>
+        Register first, then login with your credentials
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Toggle password visibility
+  function togglePass() {
+    const input = document.getElementById('passwordInput');
+    const icon = document.getElementById('togglePassword');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.className = 'bi bi-eye-slash input-icon';
+    } else {
+      input.type = 'password';
+      icon.className = 'bi bi-eye input-icon';
+    }
+  }
+</script>
+
+<%- include('partials/footer') %>

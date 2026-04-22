@@ -1,0 +1,180 @@
+<%- include('partials/header') %>
+
+<!-- ── HERO SECTION ──────────────────────────────────────────── -->
+<section class="hero-section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+
+      <!-- Left: Text -->
+      <div class="col-lg-6">
+        <div class="hero-badge">
+          <span class="online-dot"></span>
+          AI-Powered Learning Platform
+        </div>
+
+        <h1 class="hero-title">
+          Study Smarter<br>
+          with <span class="text-gradient">AI Power</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Your intelligent study companion. Practice quizzes, chat with AI, and
+          track your progress — all in one beautifully designed platform.
+        </p>
+
+        <div class="d-flex gap-3 flex-wrap">
+          <a href="/register" class="btn-primary-custom">
+            <i class="bi bi-rocket-takeoff"></i> Get Started Free
+          </a>
+          <a href="/login" class="btn-secondary-custom">
+            <i class="bi bi-box-arrow-in-right"></i> Login
+          </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-number">10+</div>
+            <div class="hero-stat-label">Quiz Topics</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-number">AI</div>
+            <div class="hero-stat-label">Chatbot</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-number">∞</div>
+            <div class="hero-stat-label">Learning</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Visual Cards -->
+      <div class="col-lg-6 hero-visual">
+        <div class="row g-3">
+          <!-- Quiz Card -->
+          <div class="col-6">
+            <div class="floating-card" style="animation-delay:0s;">
+              <div style="font-size:2rem;margin-bottom:12px;">🧠</div>
+              <h6 style="font-weight:700;margin-bottom:6px;">Smart Quiz</h6>
+              <p style="color:var(--text-secondary);font-size:0.85rem;margin:0;">
+                Test your knowledge with AI-generated questions
+              </p>
+              <div style="margin-top:14px;height:6px;background:var(--border);border-radius:10px;overflow:hidden;">
+                <div style="width:72%;height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:10px;"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:6px;">
+                <span style="font-size:0.75rem;color:var(--text-muted);">Progress</span>
+                <span style="font-size:0.75rem;color:var(--primary-light);">72%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat Card -->
+          <div class="col-6" style="margin-top:24px;">
+            <div class="floating-card" style="animation-delay:1.5s;">
+              <div style="font-size:2rem;margin-bottom:12px;">🤖</div>
+              <h6 style="font-weight:700;margin-bottom:6px;">AI Chatbot</h6>
+              <p style="color:var(--text-secondary);font-size:0.85rem;margin:0;">
+                Ask anything, get instant answers
+              </p>
+              <div style="margin-top:14px;padding:8px;background:rgba(108,99,255,0.1);border-radius:8px;">
+                <p style="font-size:0.75rem;color:var(--primary-light);margin:0;">
+                  "Explain Binary Search..."
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress Card -->
+          <div class="col-12">
+            <div class="floating-card" style="animation-delay:0.75s;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                <div>
+                  <h6 style="font-weight:700;margin-bottom:2px;">📊 Your Progress</h6>
+                  <p style="color:var(--text-muted);font-size:0.8rem;margin:0;">Last 5 quizzes</p>
+                </div>
+                <span style="color:var(--success);font-weight:700;font-size:1.1rem;">+12%</span>
+              </div>
+              <div style="display:flex;gap:6px;align-items:flex-end;height:50px;">
+                <% [40, 65, 55, 80, 72].forEach(function(h) { %>
+                  <div style="flex:1;height:<%= h %>%;background:linear-gradient(180deg,var(--primary),var(--secondary));border-radius:4px;opacity:0.8;transition:all 0.3s;"></div>
+                <% }) %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES SECTION ───────────────────────────────────────── -->
+<section class="features-section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="section-badge">Features</div>
+      <h2 style="font-size:clamp(1.8rem,4vw,2.8rem);">
+        Everything You Need to <span class="text-gradient">Excel</span>
+      </h2>
+      <p style="color:var(--text-secondary);max-width:500px;margin:16px auto 0;">
+        A complete learning ecosystem designed to make studying efficient, engaging, and effective.
+      </p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="feature-icon icon-purple">🧠</div>
+          <h4>Smart Quizzes</h4>
+          <p>Multiple-choice questions across subjects. Instant feedback and detailed explanations.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="feature-icon icon-teal">🤖</div>
+          <h4>AI Chatbot</h4>
+          <p>Ask questions 24/7. Get explanations on any topic. Ready for OpenAI API integration.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="feature-icon icon-pink">📊</div>
+          <h4>Progress Tracking</h4>
+          <p>Visual stats, score history, and performance metrics to monitor your improvement.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <div class="feature-icon icon-gold">🔒</div>
+          <h4>Secure Auth</h4>
+          <p>Safe registration and login with bcrypt password hashing and session management.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA SECTION ────────────────────────────────────────────── -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-card">
+      <h2 style="font-size:clamp(1.8rem,4vw,3rem);margin-bottom:16px;position:relative;z-index:1;">
+        Ready to Start <span class="text-gradient">Learning?</span>
+      </h2>
+      <p style="color:var(--text-secondary);max-width:480px;margin:0 auto 36px;position:relative;z-index:1;font-size:1.05rem;">
+        Join and unlock your full learning potential with AI-powered tools.
+      </p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1;">
+        <a href="/register" class="btn-primary-custom">
+          <i class="bi bi-rocket-takeoff"></i> Create Free Account
+        </a>
+        <a href="/login" class="btn-secondary-custom">
+          <i class="bi bi-box-arrow-in-right"></i> Sign In
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

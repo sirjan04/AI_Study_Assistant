@@ -1,0 +1,160 @@
+<%- include('partials/header') %>
+
+<div class="dashboard-layout">
+  <div class="container">
+
+    <!-- ── WELCOME HEADER ──────────────────────────────────── -->
+    <div class="dashboard-header">
+      <div class="row align-items-center">
+        <div class="col">
+          <h1 class="welcome-text">
+            Hey, <span class="text-gradient"><%= user.name.split(' ')[0] %></span> 👋
+          </h1>
+          <p class="welcome-sub">
+            Here's your study overview. Keep up the great work!
+          </p>
+        </div>
+        <div class="col-auto">
+          <a href="/quiz" class="btn-primary-custom">
+            <i class="bi bi-play-fill"></i> Start Quiz
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STATS ROW ───────────────────────────────────────── -->
+    <div class="row g-3 mb-5">
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon">🏆</div>
+          <div class="stat-value text-gradient"><%= bestScore %>%</div>
+          <div class="stat-label">Best Score</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon">📊</div>
+          <div class="stat-value" style="color:var(--success)"><%= avgScore %>%</div>
+          <div class="stat-label">Avg Score</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon">📝</div>
+          <div class="stat-value" style="color:var(--warning)"><%= totalQuizzes %></div>
+          <div class="stat-label">Quizzes Done</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-icon">❓</div>
+          <div class="stat-value" style="color:var(--secondary)"><%= totalQuestions %></div>
+          <div class="stat-label">Questions</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MAIN ACTION CARDS ───────────────────────────────── -->
+    <h5 style="color:var(--text-muted);font-size:0.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:20px;">
+      Quick Actions
+    </h5>
+
+    <div class="row g-4 mb-5">
+
+      <!-- Quiz Card -->
+      <div class="col-md-4">
+        <a href="/quiz" class="action-card quiz">
+          <div class="action-card-bg"></div>
+          <div class="action-icon quiz">🧠</div>
+          <div class="action-title">Take a Quiz</div>
+          <p class="action-desc">
+            Challenge yourself with 10 random questions from our database.
+            Track your performance over time.
+          </p>
+          <div class="action-arrow">
+            <i class="bi bi-arrow-right-circle-fill"></i> Start Now
+          </div>
+        </a>
+      </div>
+
+      <!-- Chatbot Card -->
+      <div class="col-md-4">
+        <a href="/chatbot" class="action-card chat">
+          <div class="action-card-bg"></div>
+          <div class="action-icon chat">🤖</div>
+          <div class="action-title">AI Chatbot</div>
+          <p class="action-desc">
+            Ask your AI study buddy anything. Get instant explanations on
+            programming, math, science, and more.
+          </p>
+          <div class="action-arrow">
+            <i class="bi bi-arrow-right-circle-fill"></i> Chat Now
+          </div>
+        </a>
+      </div>
+
+      <!-- Progress Card -->
+      <div class="col-md-4">
+        <a href="/progress" class="action-card progress">
+          <div class="action-card-bg"></div>
+          <div class="action-icon progress">📈</div>
+          <div class="action-title">My Progress</div>
+          <p class="action-desc">
+            View your quiz history, track improvement trends, and celebrate
+            your achievements over time.
+          </p>
+          <div class="action-arrow">
+            <i class="bi bi-arrow-right-circle-fill"></i> View Stats
+          </div>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- ── RECENT SCORES MINI TABLE ────────────────────────── -->
+    <% if (user.quizScores && user.quizScores.length > 0) { %>
+    <div>
+      <h5 style="color:var(--text-muted);font-size:0.8rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:20px;">
+        Recent Quiz Scores
+      </h5>
+      <div style="background:var(--bg-glass);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
+        <% user.quizScores.slice(-5).reverse().forEach(function(s, i) { %>
+        <div style="display:flex;align-items:center;gap:20px;padding:18px 28px;border-bottom:<%= i < Math.min(user.quizScores.length,5)-1 ? '1px solid var(--border)' : 'none' %>;">
+          <div style="width:44px;height:44px;border-radius:var(--radius-sm);
+            background:<%= s.percentage >= 70 ? 'rgba(0,184,148,0.15)' : s.percentage >= 50 ? 'rgba(253,203,110,0.15)' : 'rgba(214,48,49,0.15)' %>;
+            display:flex;align-items:center;justify-content:center;
+            color:<%= s.percentage >= 70 ? '#00b894' : s.percentage >= 50 ? '#fdcb6e' : '#ff7675' %>;
+            font-weight:700;font-size:0.9rem;flex-shrink:0;">
+            <%= s.percentage %>%
+          </div>
+          <div style="flex:1;">
+            <div style="font-weight:600;font-size:0.95rem;margin-bottom:2px;">
+              Score: <%= s.score %>/<%= s.total %>
+            </div>
+            <div style="color:var(--text-muted);font-size:0.8rem;">
+              <%= new Date(s.dateTaken).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}) %>
+            </div>
+          </div>
+          <div style="font-size:1.2rem;">
+            <%= s.percentage >= 80 ? '🏆' : s.percentage >= 60 ? '⭐' : '💪' %>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+    <% } else { %>
+    <!-- Empty state -->
+    <div style="text-align:center;padding:60px 20px;background:var(--bg-glass);border:1px solid var(--border);border-radius:var(--radius-lg);">
+      <div style="font-size:3rem;margin-bottom:16px;">🎯</div>
+      <h4 style="margin-bottom:8px;">No quizzes taken yet!</h4>
+      <p style="color:var(--text-secondary);margin-bottom:24px;">Take your first quiz to start tracking progress</p>
+      <a href="/quiz" class="btn-primary-custom">
+        <i class="bi bi-play-fill"></i> Take First Quiz
+      </a>
+    </div>
+    <% } %>
+
+  </div>
+</div>
+
+<%- include('partials/footer') %>
